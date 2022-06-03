@@ -8,6 +8,7 @@ import { GlobalStyle } from '../styles/global';
 
 import SignInPage from './Sign/SignInPage';
 import SignUpPage from './Sign/SignUpPage';
+import Subscriptions from './Subscriptions/Subscriptions';
 
 export default function App () {
 
@@ -22,6 +23,7 @@ export default function App () {
                 <Routes>
                 <Route path='/' element={<SignInPage />}/>
                 <Route path='/sign-up' element={<SignUpPage />}/>
+                <Route path='/subscriptions' element={<Subscriptions />}/>
                 </Routes>
             </UserContext.Provider>
             <GlobalStyle />
