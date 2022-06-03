@@ -2,12 +2,12 @@ import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from 'react';
-//import axios from 'axios';
+import axios from 'axios';
 
 //import { useContext } from "react";
 //import UserContext from './contexts/UserContext';
+import { ThreeDots } from "react-loader-spinner";
 
-import logoImg from '../../assets/images/logo.svg'
 
 import styled from 'styled-components';
 import Container from '../../shared/Container';
@@ -16,16 +16,77 @@ import Button from '../../shared/Button';
 
 export default function SignInPage () {
 
+    const navigate = useNavigate(); 
+
+    const [name, setName] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    
+    //Function to verification identification to personal information 
+    function formataCPF(cpfTeste) {
+        cpfTeste = cpfTeste.replace(/[^\d]/g, ""); 
+
+        return cpfTeste.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
+
+
+    const [pageLoaded, setPageLoaded] = useState(true);
+    function fillLoading() {
+        return !pageLoaded ? (
+            <ThreeDots color="#fff" height={40} width={40} />
+
+        ) : (
+            "CADASTRAR"
+        ); 
+    }
+
+    function disableLoading() {
+        return !pageLoaded ? "disabled" : ""; 
+    }
+
+    function signUpForm(event) {
+        event.preventDefault(); 
+        setPageLoaded(false); 
+
+        setCpf(formataCPF(cpf)); //colocando o CPF no formato: 000.000.000-00
+
+
+        const body = {
+            email: email,
+            name: name,
+            cpf: cpf,
+            password: password
+        }
+
+        const SIGN_UP_API = 'https://mock-api.driven.com.br/api/v4/driven-plus/auth/sign-up'; 
+
+        const promise = axios.post(SIGN_UP_API, body); 
+        promise
+            .then(response => {
+                navigate('/'); 
+                console.log(response.data); 
+        })
+            .catch(error => {
+                alert('Cadastro inválido! Por favor verifique seus dados');
+                setPageLoaded(true); 
+            })
+    }
+
  
 
 return (
     <Container>  
     <ContainerLogin>
-        <FormLogin>
+        <FormLogin onSubmit={(event) =>
+        signUpForm(event)}>
 
         <InputLogin
         placeholder='Nome'
         type='text'
+        value={name} 
+        onChange={(e) => setName(e.target.value)}
         required
         autoComplete='on'
         />
@@ -33,6 +94,8 @@ return (
         <InputLogin
         placeholder='CPF'
         type='text'
+        value={cpf}
+        onChange={(e) => setCpf(e.target.value)}
         required
         autoComplete='on'
         />
@@ -40,18 +103,24 @@ return (
         <InputLogin
         placeholder='E-mail'
         type='text'
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         required
         autoComplete='on'
         />
 
         <InputLogin
         placeholder='Senha'
-        type='password'     
+        type='password'
+        value={password}    
+        onChange={(e) => setPassword(e.target.value)} 
         required
         autoComplete='on'
         />
 
-        <Button>CADASTRAR</Button>
+        <Button type='submit'>
+            {fillLoading()}
+        </Button>
                 
     </FormLogin>
     <Link to='/'>
@@ -100,16 +169,11 @@ const InputLogin = styled.input`
 
 `
 
-
 const FormLogin = styled.form`
-margin: 0 auto; 
+    margin: 0 auto; 
     display: flex;
     flex-direction: column;
- 
-
 `
-
-
 const Logo = styled.nav` 
     margin: 0 auto; 
     margin-top: 134px;
