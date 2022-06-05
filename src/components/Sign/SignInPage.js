@@ -1,11 +1,15 @@
 import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
-import { useState } from 'react';
-//import axios from 'axios';
+import { ThreeDots } from "react-loader-spinner";
 
-//import { useContext } from "react";
-//import UserContext from './contexts/UserContext';
+import { useState } from 'react';
+import axios from 'axios';
+
+import { useContext } from "react";
+
+
+import UserContext from '../contexts/UserContext';
 
 import logoImg from '../../assets/images/logo.svg'
 
@@ -16,15 +20,80 @@ import Button from '../../shared/Button';
 
 export default function SignInPage () {
 
+    const { setUserData } = useContext(UserContext); 
+    const { setToken } = useContext(UserContext);
+    const { setName } = useContext(UserContext);
+
+
+    const navigate = useNavigate(); 
+
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState('');
+
+    const [pageLoaded, setPageLoaded] = useState(true); 
+    const [submit, setSubmit] = useState(false);
+
+
+    function fillLoading() {
+        return !pageLoaded ? (
+            <ThreeDots color="#fff" height={40} width={40} />
+
+        ) : (
+            "ENTRAR"
+        ); 
+    }
+
+    function disableLoading() {
+        return !pageLoaded ? "disabled" : ""; 
+    }
+
+    function submitLogin (event) {
+        event.preventDefault(); 
+        setSubmit(true); 
+
+        const body = {
+            email: email,
+            password: password,
+        };
+
+        const API = "https://mock-api.driven.com.br/api/v4/driven-plus/auth/login";
+
+
+        const promise = axios.post(API, body);
+
+        promise
+            .then(response => {
+                const data = response.data;
+                const userLogin = {
+                    email: data.email,
+                    id: data.id,
+                    name: data.name,
+                    membership: data.membership,
+                    token: data.token,
+                };
+                localStorage.setItem("userData", JSON.stringify(userLogin));
+                setUserData(JSON.parse(localStorage.getItem("userData")));
+                setToken(response.data.token);
+                setName(response.data.name);
+                const membership = response.data.membership; 
+                if(membership === null) {
+                    navigate("/subscriptions");
+                } else {
+                    navigate("/home"); 
+                }
+            })
+            .catch(response => {
+                alert("Usuário e/ou senha inválido(s)!");
+                setSubmit(false); 
+            })
+    }
 
     return (
         <Container>
             <Logo><img src={logoImg} alt="logo" /></Logo>
             
             <ContainerLogin>
-            <FormLogin>
+            <FormLogin onSubmit={submitLogin}>
 
                 <InputLogin
                 placeholder='E-mail'
@@ -32,6 +101,7 @@ export default function SignInPage () {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={disableLoading()}
                 autoComplete='on'
                 />
 
@@ -41,10 +111,13 @@ export default function SignInPage () {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={disableLoading()}
                 autoComplete='on'
                 />
 
-                <Button>ENTRAR</Button>
+                <Button type="submit">
+                {fillLoading()}
+                </Button>
                
         
             </FormLogin>
