@@ -87,7 +87,7 @@ return (
         type='text'
         value={name} 
         onChange={(e) => setName(e.target.value)}
-        required
+        required maxlength="45"
         autoComplete='on'
         />
 
@@ -96,16 +96,17 @@ return (
         type='text'
         value={cpf}
         onChange={(e) => setCpf(e.target.value)}
-        required
+        required maxlength="11"
+        pattern="[0-9]{11}"
         autoComplete='on'
         />
 
         <InputLogin
         placeholder='E-mail'
-        type='text'
+        type='email'
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        required
+        required maxlength="40"
         autoComplete='on'
         />
 
@@ -114,7 +115,7 @@ return (
         type='password'
         value={password}    
         onChange={(e) => setPassword(e.target.value)} 
-        required
+        required maxlength="16"
         autoComplete='on'
         />
 

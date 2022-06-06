@@ -24,9 +24,12 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
 
+
+
+
 export default function Home () {
 
-    const {planId} = useParams(); 
+
     const { userData } = useContext(UserContext);
 
     const navigate = useNavigate(); 
@@ -59,6 +62,7 @@ export default function Home () {
         navigate('/subscriptions')
     }
 
+
     return (
         <Container>
             
@@ -66,18 +70,16 @@ export default function Home () {
             <ContainerHome>
 
             <Header>
-            <ImgSymbol src={logoHomePlusImg} alt="logomarca do plano plus" /> 
+            <ImgSymbol src={dataMembership.image} alt="logomarca do plano plus" /> 
             <ImgName src={profileImg} alt="profile" />
             </Header>
 
             <h2>Olá, {name}</h2>
 
-            {listOfBenefits.map((benef, index) => <ButtonBenefits><a href={benef.link}>{benef.title}</a></ButtonBenefits>)}
-
-        
+            {listOfBenefits.map((benef, index) => <ButtonBenefits key={index}><a href={benef.link}>{benef.title}</a></ButtonBenefits>)}
 
             <Footer>
-            <Button onClick={chancePlan}>Mudar plano</Button>
+            <ButtonChange onClick={chancePlan}>Mudar plano</ButtonChange>
             <ButtonCancel onClick={deletePlan}>Cancelar plano</ButtonCancel>
             </Footer>
      
@@ -85,6 +87,38 @@ export default function Home () {
         </Container>
     )
 }
+
+
+const ButtonChange = styled.button`
+    margin: 0 auto; 
+    cursor: pointer;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+    width: 298px;
+    height: 52px;
+
+    background: var(--pink-medium);
+    border-radius: 8px;
+
+    transition: filter 0.2s;
+
+    &:hover {
+        filter: brightness(0.9);
+    }
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 16px;
+
+    color: var(--white);
+`
 
 const ButtonCancel = styled.button`
     margin: 0 auto; 
@@ -166,11 +200,13 @@ const ContainerHome = styled.div`
         justify-content: center;
         align-items: center;
 
-        color: #FFFFFF; 
+        color: var(--white); 
     }
 `
 
 const ImgSymbol = styled.img`
+width: 74.52px;
+height: 50.87px;
 
 `
 

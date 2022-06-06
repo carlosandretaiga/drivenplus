@@ -104,7 +104,7 @@ export default function SubscriptionsPlan () {
 
         })
         promise.catch(() => {
-            alert("Envio de dados bancários não realizado!");
+            alert("Envio de dados bancários não realizado. Revise-os!");
         })
     }
 
@@ -170,7 +170,8 @@ export default function SubscriptionsPlan () {
                 type='text'
                 value={cardDigits}
                 onChange={(e) => setCardDigits(e.target.value)}
-                required
+                required maxlength="16"
+                //pattern="[0-9]{16}"
                 autoComplete='on'
                 />
 
@@ -180,7 +181,8 @@ export default function SubscriptionsPlan () {
                     type='text'
                     value={securityCode}
                     onChange={(e) => setSecurityCode(e.target.value)}
-                    required
+                    required maxlength="3"
+                    //pattern="[0-9]{3}"
                     autoComplete='on'
                      />
 
@@ -189,7 +191,7 @@ export default function SubscriptionsPlan () {
                     type='text'
                     value={validity}
                     onChange={(e) => setValidity(e.target.value)}
-                    required
+                    required maxlength="5"
                     autoComplete='on'
                      />
                 </ContainerInput>
