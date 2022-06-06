@@ -44,10 +44,14 @@ export default function SubscriptionsPlan () {
 
 
 
+
+
     const [cardName, setCardName] = useState(''); 
     const [cardDigits, setCardDigits] = useState('');
     const [securityCode, setSecurityCode] = useState('');
     const [validity, setValidity] = useState('');
+
+
     
 
     useEffect(() => {
@@ -67,10 +71,7 @@ export default function SubscriptionsPlan () {
             setPrice(response.data.price);
             setPlanSelect([...response.data.perks]); 
             setShipId({...response.data.perks[0]})
-            //console.log(planSelect[0]); 
-            //console.log(price); 
-            //console.log(shipId); 
-
+            
         })
 
     }, [])
@@ -119,14 +120,17 @@ export default function SubscriptionsPlan () {
 
     }
 
-
-
+    function comeBack () {
+        navigate('/subscriptions'); 
+    }
 
     return (
         <Container>
             <Header>
                 <ComeBack>
+                <button className='come-back' onClick={comeBack}>
                 <img src={comeBackImg} alt="voltar" />
+                </button>
                 </ComeBack>
             </Header>
             <Logo>
@@ -142,7 +146,7 @@ export default function SubscriptionsPlan () {
                 </ContainerBeneficio>
 
                 
-                {planSelect.map((plan, index) => <p>{plan.id}. {plan.title}</p>)}
+                {planSelect.map((plan, index) => <p key={index}>{plan.id}. {plan.title}</p>)}
                 
                 <ContainerPrice>
                     <img src={moneyImg} alt="simbolo de lista" />

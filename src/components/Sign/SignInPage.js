@@ -22,7 +22,9 @@ export default function SignInPage () {
 
     const { setUserData } = useContext(UserContext); 
     const { setToken } = useContext(UserContext);
-    const { setName } = useContext(UserContext);
+    const { name, setName } = useContext(UserContext);
+
+    const {dataMembership, setDataMembership} = useContext(UserContext);
 
 
     const navigate = useNavigate(); 
@@ -75,11 +77,14 @@ export default function SignInPage () {
                 setUserData(JSON.parse(localStorage.getItem("userData")));
                 setToken(response.data.token);
                 setName(response.data.name);
+                setDataMembership({...response.data.membership})
                 const membership = response.data.membership; 
                 if(membership === null) {
-                    navigate("/subscriptions");
+                    navigate("/subscriptions");  
+                    
                 } else {
                     navigate("/home"); 
+                    console.log("No login:", dataMembership);
                 }
             })
             .catch(response => {

@@ -16,7 +16,7 @@ import Container from '../../shared/Container';
 function Plan({img, price, id}) {
 
     return (
-        <Link to={`/subscriptionsplan/${id}`}>
+        <Link to={`/subscriptions/${id}`}>
         <PlanPlus>
         <img src={img} alt="logo" />
         <Span>R$ {price.replace('.', ',')}</Span>

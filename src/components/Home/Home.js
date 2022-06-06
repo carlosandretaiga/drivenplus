@@ -1,11 +1,16 @@
 import React from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useState } from 'react';
-//import axios from 'axios';
+import axios from 'axios';
 
-//import { useContext } from "react";
-//import UserContext from './contexts/UserContext';
+import { useParams } from 'react-router-dom';
+
+import { useContext } from "react";
+
+import { useEffect } from 'react';
+
+import UserContext from '../contexts/UserContext';
 
 import logoHomePlusImg from '../../assets/images/home-plus.svg'
 import logoHomeGoldImg from '../../assets/images/home-gold.svg'
@@ -21,8 +26,38 @@ import Footer from '../Footer/Footer';
 
 export default function Home () {
 
-    const [cardName, setCardName] = useState(''); 
-    const [cardDigits, setCardDigits] = useState('');
+    const {planId} = useParams(); 
+    const { userData } = useContext(UserContext);
+
+    const navigate = useNavigate(); 
+
+    const [plans, setPlans] = useState([]); 
+
+    const { name } = useContext(UserContext);
+
+    const { dataMembership } = useContext(UserContext);
+
+    const listOfBenefits = dataMembership.perks; 
+
+    console.log("No home:", dataMembership);
+
+
+    function deletePlan () {
+        const token = userData.token;
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        const promise = axios.delete("https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions", config);
+        promise.then(() => {
+            navigate('/subscriptions');
+        })
+    }
+
+    function chancePlan() {
+        navigate('/subscriptions')
+    }
 
     return (
         <Container>
@@ -35,15 +70,15 @@ export default function Home () {
             <ImgName src={profileImg} alt="profile" />
             </Header>
 
-            <h2>Olá, fulando</h2>
+            <h2>Olá, {name}</h2>
 
+            {listOfBenefits.map((benef, index) => <ButtonBenefits><a href={benef.link}>{benef.title}</a></ButtonBenefits>)}
 
-            <ButtonBenefits>Solicitar brindes</ButtonBenefits>
-            <ButtonBenefits>Materiais bônus de web</ButtonBenefits>
+        
 
             <Footer>
-            <Button>Mudar plano</Button>
-            <ButtonCancel>Cancelar plano</ButtonCancel>
+            <Button onClick={chancePlan}>Mudar plano</Button>
+            <ButtonCancel onClick={deletePlan}>Cancelar plano</ButtonCancel>
             </Footer>
      
             </ContainerHome> 
@@ -94,6 +129,11 @@ const ButtonBenefits = styled.button`
     margin-bottom: 1.2rem;
     width: 298px;
     height: 52px;
+
+    a { 
+        text-decoration: none;
+        color: var(--white);
+    }
 
     background: var(--pink-medium);
     border-radius: 8px;

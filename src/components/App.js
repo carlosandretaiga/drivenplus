@@ -20,7 +20,10 @@ export default function App () {
     const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("userData")));
 
     const [token, setToken] = useState(''); 
-    const [name, setName] = useState('')
+    const [name, setName] = useState('');
+
+    const [dataMembership, setDataMembership] = useState({}); 
+   
 
     return (
         <BrowserRouter>
@@ -29,14 +32,15 @@ export default function App () {
             value={{
                 token, setToken,
                 userData, setUserData,
-                name, setName
+                name, setName,
+                dataMembership, setDataMembership
 
             }}>
                 <Routes>
                 <Route path='/' element={<SignInPage />}/>
                 <Route path='/sign-up' element={<SignUpPage />}/>
                 <Route path='/subscriptions' element={<Subscriptions />}/>
-                <Route path='/subscriptionsplan/:planId' element={<SubscriptionsPlan />}/>
+                <Route path='/subscriptions/:planId' element={<SubscriptionsPlan />}/>
                 <Route path='/home' element={<Home />}/>
                 </Routes>
             </UserContext.Provider>

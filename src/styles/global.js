@@ -81,17 +81,21 @@ export const GlobalStyle = createGlobalStyle`
         max-width: 250px;
         background: var(--white);
         padding: 1rem;
-        //position: relative;
+        position: relative;
         border-radius: 12px;
     }
 
     .react-modal-close {
         position: absolute;
-        right: 30rem;
-        top: 2.5rem;
+        right: -2rem;
+        top: -13.5rem;
         border: 0;
         background: transparent;
+    }
 
+    .come-back {
+        border: 0;
+        background: transparent;
 
     }
 
