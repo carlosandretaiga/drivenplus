@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useState } from 'react';
 import axios from 'axios';
@@ -22,7 +22,6 @@ import comeBackImg from '../../assets/images/come-back.svg'
 
 import styled from 'styled-components';
 import Container from '../../shared/Container';
-//import Button from '../../shared/Button';
 import { useEffect } from 'react';
 import Modal from 'react-modal'; 
 import Header from '../Header/Header';
@@ -36,9 +35,6 @@ export default function SubscriptionsPlan () {
     const navigate = useNavigate(); 
     const { token, setPlan } = useContext(UserContext);
 
-    const { userData } = useContext(UserContext);
-
-    //const { dataMembership, setDataMembership } = useContext(UserContext);
 
     const [planSelect, setPlanSelect] = useState([]);
     const [price, setPrice] = useState(''); 
@@ -49,7 +45,6 @@ export default function SubscriptionsPlan () {
     const [securityCode, setSecurityCode] = useState('');
     const [validity, setValidity] = useState('');
 
-    //const [refresh, setRefresh] = useState(""); 
 
 
     useEffect(() => {
@@ -105,6 +100,29 @@ export default function SubscriptionsPlan () {
             alert("Envio de dados bancários não realizado. Revise-os!");
         })
     }
+
+
+    function validadeCard(creditCard){
+        return creditCard
+          .replace(/\D/g,'')
+          .replace(/(\d{4})(\d)/,'$1 $2')
+          .replace(/(\d{4})(\d)/,'$1 $2')
+          .replace(/(\d{4})(\d)/,'$1 $2')
+          .replace(/(\d{4})(\d)/g,'$1');
+      }
+    
+      function validadeCode(code){
+        return code
+          .replace(/\D/g,'')
+          .replace(/^(\d{3})(\d)/g,'$1');
+      }
+    
+      function validadeDate(date){
+        return date
+        .replace(/\D/g,'')
+        .replace(/(\d{2})(\d)/,'$1/$2')
+        .replace(/(\d{2})(\d)/g,'$1');
+      }
 
     const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);
 
@@ -181,7 +199,7 @@ export default function SubscriptionsPlan () {
                 placeholder='Digitos do cartão'
                 type='text'
                 value={cardDigits}
-                onChange={(e) => setCardDigits(e.target.value)}
+                onChange={(e) => setCardDigits(validadeCard(e.target.value))}
                 //required maxlength="16"
                 //pattern="[0-9]{16}"
                 autoComplete='on'
@@ -192,7 +210,7 @@ export default function SubscriptionsPlan () {
                     placeholder='Código de segurança'
                     type='text'
                     value={securityCode}
-                    onChange={(e) => setSecurityCode(e.target.value)}
+                    onChange={(e) => setSecurityCode(validadeCode(e.target.value))}
                     //required maxlength="3"
                     //pattern="[0-9]{3}"
                     autoComplete='on'
@@ -202,7 +220,7 @@ export default function SubscriptionsPlan () {
                     placeholder='Validade'
                     type='text'
                     value={validity}
-                    onChange={(e) => setValidity(e.target.value)}
+                    onChange={(e) => setValidity(validadeDate(e.target.value))}
                     //required maxlength="5"
                     autoComplete='on'
                      />

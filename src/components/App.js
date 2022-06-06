@@ -30,7 +30,7 @@ export default function App () {
                 <Route path='/' element={<SignInPage />}/>
                 <Route path='/sign-up' element={<SignUpPage />}/>
                 <Route path='/subscriptions' element={<Subscriptions />}/>
-                <Route path='/subscription/:planId' element={<SubscriptionsPlan />}/>
+                <Route path='/subscriptions/:planId' element={<SubscriptionsPlan />}/>
                 <Route path='/home' element={<Home />}/>
                 </Routes>
 

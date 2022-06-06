@@ -62,7 +62,7 @@ return (
         <Title>Escolha seu Plano</Title> 
 
         {plans.map((plan) => 
-        <PlanPlus key={plan.id} onClick={() => navigate(`/subscription/${plan.id}`)}>
+        <PlanPlus key={plan.id} onClick={() => navigate(`/subscriptions/${plan.id}`)}>
         <img src={plan.image} alt="logo" />
         <Span>R$ {plan.price.replace('.', ',')}</Span>
         </PlanPlus>
