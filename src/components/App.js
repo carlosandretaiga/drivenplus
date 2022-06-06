@@ -13,15 +13,14 @@ import Subscriptions from './Subscriptions/Subscriptions';
 import SubscriptionsPlan from './Subscriptions/SubscriptionsPlan';
 import Home from './Home/Home';
 
+
+
 export default function App () {
 
     const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("userData")));
 
     const [token, setToken] = useState(''); 
     const [name, setName] = useState('')
-
-
-
 
     return (
         <BrowserRouter>
@@ -37,7 +36,7 @@ export default function App () {
                 <Route path='/' element={<SignInPage />}/>
                 <Route path='/sign-up' element={<SignUpPage />}/>
                 <Route path='/subscriptions' element={<Subscriptions />}/>
-                <Route path='/subscriptions/test' element={<SubscriptionsPlan />}/>
+                <Route path='/subscriptionsplan/:planId' element={<SubscriptionsPlan />}/>
                 <Route path='/home' element={<Home />}/>
                 </Routes>
             </UserContext.Provider>

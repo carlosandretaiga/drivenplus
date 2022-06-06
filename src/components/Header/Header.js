@@ -14,7 +14,7 @@ export default function Header ({children}) {
 
 const ContainerHeader = styled.header` 
     margin: 0 auto; 
-    margin-top: 32px;
+    margin-top: 12px;
     margin-left: 5px;
     margin-right: 40px;
     margin-bottom: 30px;

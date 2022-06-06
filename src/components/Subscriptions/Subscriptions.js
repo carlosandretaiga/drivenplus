@@ -1,16 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
-import { useState } from 'react';
+import { useState, useEffect } from "react";
 import axios from 'axios';
 
-//import { useContext } from "react";
-//import UserContext from './contexts/UserContext';
-import { ThreeDots } from "react-loader-spinner";
-
-import planPlusImg from '../../assets/images/plan-plus.svg';
-import planGoldImg from '../../assets/images/plan-gold.svg';
-import planPlatinumdImg from '../../assets/images/plan-platinum.svg';
+import { useContext } from "react";
+import UserContext from '../contexts/UserContext';
 
 
 import styled from 'styled-components';
@@ -18,11 +13,50 @@ import Container from '../../shared/Container';
 
 
 
+function Plan({img, price, id}) {
+
+    return (
+        <Link to={`/subscriptionsplan/${id}`}>
+        <PlanPlus>
+        <img src={img} alt="logo" />
+        <Span>R$ {price.replace('.', ',')}</Span>
+        </PlanPlus>
+        </Link>
+    )
+}
+
+
+
 export default function Subscriptions () {
+ 
 
-    const pricePlan = ['39,99', '69,99', '99,99']; 
+    const { token } = useContext(UserContext);
+    const { userData } = useContext(UserContext);
+
+    const [plans, setPlans] = useState([]); 
+
+    useEffect(() => {
+
+        const token = userData.token;
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
 
 
+        const API = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships";
+
+        const promise = axios.get(API, config);
+
+        promise.then(response => {
+            setPlans([...response.data]);
+            console.log(plans); 
+        })
+
+    }, [])
+
+    
  
 return (
     <Container>
@@ -30,23 +64,9 @@ return (
         <ContainerSubscriptions>
         <Title>Escolha seu Plano</Title> 
 
-        <PlanPlus>
-        <img src={planPlusImg} alt="logo" />
-        <Span>R$ {pricePlan[0]}</Span>
-        </PlanPlus>
-
-        <PlanPlus>
-        <img src={planGoldImg} alt="logo" />
-        <Span>R$ {pricePlan[1]}</Span>
-        </PlanPlus>
-
-        <PlanPlus>
-        <img src={planGoldImg} alt="logo" />
-        <Span>R$ {pricePlan[2]}</Span>
-        </PlanPlus>
-
-
-
+        {plans.map((plan, index) => 
+        <Plan key={index} img={plan.image} price={plan.price} id={plan.id}></Plan>
+        )}
 
         </ContainerSubscriptions>
       
@@ -68,6 +88,7 @@ const PlanPlus = styled.div`
     height: 180px;
 
     transition: filter 0.2s;
+
 
     &:hover {
         filter: brightness(0.4);
@@ -92,6 +113,9 @@ const Title = styled.h1`
 
 const ContainerSubscriptions = styled.div`
     margin: 0 auto; 
+    a { 
+        text-decoration: none;
+    }
 `
 
 const InputLogin = styled.input`
