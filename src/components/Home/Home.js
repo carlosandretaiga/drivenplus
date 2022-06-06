@@ -4,49 +4,41 @@ import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from 'axios';
 
-import { useParams } from 'react-router-dom';
-
 import { useContext } from "react";
-
-import { useEffect } from 'react';
 
 import UserContext from '../contexts/UserContext';
 
-import logoHomePlusImg from '../../assets/images/home-plus.svg'
-import logoHomeGoldImg from '../../assets/images/home-gold.svg'
-import logoHomePlatinumImg from '../../assets/images/home-platinum.svg'
 import profileImg from '../../assets/images/profile.svg'
 
 import styled from 'styled-components';
 import Container from '../../shared/Container';
-import Button from '../../shared/Button';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-
-
-
+import { useEffect } from 'react';
 
 
 export default function Home () {
 
-
-    const { userData } = useContext(UserContext);
+    //const { userData } = useContext(UserContext);
 
     const navigate = useNavigate(); 
+    
+   // const [plans, setPlans] = useState([]); 
 
-    const [plans, setPlans] = useState([]); 
+    const { name, token, plan } = useContext(UserContext);
 
-    const { name } = useContext(UserContext);
+    //const { dataMembership, setDataMembership } = useContext(UserContext);
 
-    const { dataMembership } = useContext(UserContext);
+    //const listOfBenefits = dataMembership.perks; 
 
-    const listOfBenefits = dataMembership.perks; 
+    //console.log("No home:", dataMembership);
 
-    console.log("No home:", dataMembership);
+    //console.log(listOfBenefits);
 
 
     function deletePlan () {
-        const token = userData.token;
+
+        //const tokenUser = userData.token;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -54,8 +46,9 @@ export default function Home () {
         };
         const promise = axios.delete("https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions", config);
         promise.then(() => {
+            alert('Plano cancelado com sucesso!');
             navigate('/subscriptions');
-        })
+        }); 
     }
 
     function chancePlan() {
@@ -63,31 +56,26 @@ export default function Home () {
     }
 
 
-    return (
+    return Object.values(plan).length > 0 ? (
         <Container>
-            
-         
             <ContainerHome>
-
             <Header>
-            <ImgSymbol src={dataMembership.image} alt="logomarca do plano plus" /> 
+            <ImgSymbol src={plan.image} alt="logomarca do plano plus" /> 
             <ImgName src={profileImg} alt="profile" />
             </Header>
 
             <h2>Olá, {name}</h2>
 
-            {listOfBenefits.map((benef, index) => <ButtonBenefits key={index}><a href={benef.link}>{benef.title}</a></ButtonBenefits>)}
+            {plan.perks.map((benef, index) => <ButtonBenefits key={index}><a href={benef.link}>{benef.title}</a></ButtonBenefits>)}
 
             <Footer>
             <ButtonChange onClick={chancePlan}>Mudar plano</ButtonChange>
             <ButtonCancel onClick={deletePlan}>Cancelar plano</ButtonCancel>
             </Footer>
-     
             </ContainerHome> 
         </Container>
-    )
+    ) : <></>;
 }
-
 
 const ButtonChange = styled.button`
     margin: 0 auto; 

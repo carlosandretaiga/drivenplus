@@ -20,12 +20,9 @@ import Button from '../../shared/Button';
 
 export default function SignInPage () {
 
-    const { setUserData } = useContext(UserContext); 
-    const { setToken } = useContext(UserContext);
-    const { name, setName } = useContext(UserContext);
 
-    const {dataMembership, setDataMembership} = useContext(UserContext);
-
+    const { setToken, setPlan } = useContext(UserContext);
+    const { setName } = useContext(UserContext);
 
     const navigate = useNavigate(); 
 
@@ -60,34 +57,17 @@ export default function SignInPage () {
 
         const API = "https://mock-api.driven.com.br/api/v4/driven-plus/auth/login";
 
-
         const promise = axios.post(API, body);
 
-        promise
-            .then(response => {
-                const data = response.data;
-                const userLogin = {
-                    email: data.email,
-                    id: data.id,
-                    name: data.name,
-                    membership: data.membership,
-                    token: data.token,
-                };
-                localStorage.setItem("userData", JSON.stringify(userLogin));
-                setUserData(JSON.parse(localStorage.getItem("userData")));
+        promise.then(response => {
+
+                response.data.membership === null ? navigate ('/subscriptions') : navigate ('/home');
                 setToken(response.data.token);
                 setName(response.data.name);
-                setDataMembership({...response.data.membership})
-                const membership = response.data.membership; 
-                if(membership === null) {
-                    navigate("/subscriptions");  
-                    
-                } else {
-                    navigate("/home"); 
-                    console.log("No login:", dataMembership);
-                }
-            })
-            .catch(response => {
+                setPlan(response.data.membership);
+            });
+
+        promise.catch(response => {
                 alert("Usuário e/ou senha inválido(s)!");
                 setSubmit(false); 
             })

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from 'react';
 import axios from 'axios';
@@ -34,29 +34,26 @@ export default function SubscriptionsPlan () {
 
     const {planId} = useParams(); 
     const navigate = useNavigate(); 
+    const { token, setPlan } = useContext(UserContext);
 
-    const { token } = useContext(UserContext);
     const { userData } = useContext(UserContext);
+
+    //const { dataMembership, setDataMembership } = useContext(UserContext);
 
     const [planSelect, setPlanSelect] = useState([]);
     const [price, setPrice] = useState(''); 
     const [shipId, setShipId] = useState({}); 
-
-
-
-
 
     const [cardName, setCardName] = useState(''); 
     const [cardDigits, setCardDigits] = useState('');
     const [securityCode, setSecurityCode] = useState('');
     const [validity, setValidity] = useState('');
 
+    //const [refresh, setRefresh] = useState(""); 
 
-    
 
     useEffect(() => {
 
-        const token = userData.token;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -71,18 +68,18 @@ export default function SubscriptionsPlan () {
             setPrice(response.data.price);
             setPlanSelect([...response.data.perks]); 
             setShipId({...response.data.perks[0]})
+            console.log(planSelect);
             
         })
 
-    }, [])
+    }, [token])
 
-    //const verificando = shipId.membershipId; 
-    //console.log(verificando); 
 
     function submitForm(event) {
         event.preventDefault();
 
-        const token = userData.token;
+
+        //const token = userData.token;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -99,8 +96,9 @@ export default function SubscriptionsPlan () {
 
         const API = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions";
         const promise = axios.post(API, data, config); 
-        promise.then(() => {
-            navigate("/home")
+        promise.then((response) => {
+            setPlan(response.data.membership);
+            navigate("/home");
 
         })
         promise.catch(() => {
@@ -110,9 +108,23 @@ export default function SubscriptionsPlan () {
 
     const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);
 
-    function handleOpenNewTransactionModal() {
-        setIsNewTransactionModalOpen(true); 
 
+    function isNumeric(value) {
+        return /^-?\d+$/.test(value);
+    }
+    
+
+
+    function handleOpenNewTransactionModal() {
+
+        if(isNumeric(cardName) === true) {
+            alert('Digite caracteres alfabéticos no campo nome do cartão de crédito!');
+            navigate(`/subscriptions/${planId}`);
+            //setIsNewTransactionModalOpen(false);
+        } else {
+            setIsNewTransactionModalOpen(true);
+        }
+        
     }
 
     function handleCloseNewTransactionModal() {
@@ -170,7 +182,7 @@ export default function SubscriptionsPlan () {
                 type='text'
                 value={cardDigits}
                 onChange={(e) => setCardDigits(e.target.value)}
-                required maxlength="16"
+                //required maxlength="16"
                 //pattern="[0-9]{16}"
                 autoComplete='on'
                 />
@@ -181,7 +193,7 @@ export default function SubscriptionsPlan () {
                     type='text'
                     value={securityCode}
                     onChange={(e) => setSecurityCode(e.target.value)}
-                    required maxlength="3"
+                    //required maxlength="3"
                     //pattern="[0-9]{3}"
                     autoComplete='on'
                      />
@@ -191,7 +203,7 @@ export default function SubscriptionsPlan () {
                     type='text'
                     value={validity}
                     onChange={(e) => setValidity(e.target.value)}
-                    required maxlength="5"
+                    //required maxlength="5"
                     autoComplete='on'
                      />
                 </ContainerInput>

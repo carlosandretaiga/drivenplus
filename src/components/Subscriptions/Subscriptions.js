@@ -13,10 +13,12 @@ import Container from '../../shared/Container';
 
 
 
+
+
 function Plan({img, price, id}) {
 
     return (
-        <Link to={`/subscriptions/${id}`}>
+        <Link to={`/subscriptionsplan/${id}`}>
         <PlanPlus>
         <img src={img} alt="logo" />
         <Span>R$ {price.replace('.', ',')}</Span>
@@ -25,36 +27,31 @@ function Plan({img, price, id}) {
     )
 }
 
-
-
 export default function Subscriptions () {
- 
 
     const { token } = useContext(UserContext);
-    const { userData } = useContext(UserContext);
-
+    const navigate = useNavigate();
     const [plans, setPlans] = useState([]); 
 
     useEffect(() => {
+        if (token !== '') {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+    
+            const API = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships";
+    
+            const promise = axios.get(API, config);
+    
+            promise.then(response => {
+                setPlans([...response.data]);
+                console.log(plans); 
+            })
+        }
 
-        const token = userData.token;
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        };
-
-
-        const API = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships";
-
-        const promise = axios.get(API, config);
-
-        promise.then(response => {
-            setPlans([...response.data]);
-            console.log(plans); 
-        })
-
-    }, [])
+    }, [token])
 
     
  
@@ -64,8 +61,12 @@ return (
         <ContainerSubscriptions>
         <Title>Escolha seu Plano</Title> 
 
-        {plans.map((plan, index) => 
-        <Plan key={index} img={plan.image} price={plan.price} id={plan.id}></Plan>
+        {plans.map((plan) => 
+        <PlanPlus key={plan.id} onClick={() => navigate(`/subscription/${plan.id}`)}>
+        <img src={plan.image} alt="logo" />
+        <Span>R$ {plan.price.replace('.', ',')}</Span>
+        </PlanPlus>
+       
         )}
 
         </ContainerSubscriptions>
